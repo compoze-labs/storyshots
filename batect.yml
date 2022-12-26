@@ -19,3 +19,7 @@ tasks:
       - storybook-server
     run:
       container: local-storyshots
+
+  storybook:
+    run:
+      container: storybook-server

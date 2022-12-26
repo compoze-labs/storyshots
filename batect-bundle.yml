@@ -4,6 +4,8 @@ containers:
     volumes:
       - local: ${STORYSHOTS_RESULTS_DIR}
         container: /storyshots/storyshots.spec.ts-snapshots
+      - local: ${STORYSHOTS_RESULTS_DIR}/test-results
+        container: /storyshots/test-results
     run_as_current_user:
       enabled: true
       home_directory: /storyshots

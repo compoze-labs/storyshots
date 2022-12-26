@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "build": "docker build -t local-storyshots -f Dockerfile.storyshots .",
+    "test:local": "pnpm build && IMAGE=local-storyshots pnpm test",
+    "test": "STORYBOOK_STATIC_DIR=sample-storybook/storybook-static STORYSHOTS_RESULTS_DIR=sample-storybook/storyshots bash shellspec"
+  },
   "devDependencies": {
     "@playwright/test": "^1.29.1"
   }

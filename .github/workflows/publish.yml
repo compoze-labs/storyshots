@@ -61,12 +61,9 @@ jobs:
       - name: Install PNPM packages
         run: pnpm install --frozen-lockfile
 
-      - name: Build Storybook
-        run: pnpm -F sample build-storybook
+      - name: Install shellspec
+        run: wget -O- https://git.io/shellspec | sh
 
-      - name: Run Storyshots
-        env:
-          STORYSHOTS_RESULTS_DIR: sample-storybook/storyshots
-          STORYBOOK_STATIC_DIR: sample-storybook/storybook-static
+      - name: Run Storyshots Tests
         run: |
-          ./batect --override-image storyshots=${{ needs.push_ci_image_to_registry.outputs.ciImageTag }} storyshots
+          IMAGE=${{ needs.push_ci_image_to_registry.outputs.ciImageTag }} pnpm test
