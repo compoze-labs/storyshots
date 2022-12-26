@@ -39,6 +39,6 @@ jobs:
 
       - name: Automate Github Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npx --package conventional-changelog-conventionalcommits@5.0.0 --package semantic-release@19.0.5 semantic-release
