@@ -1,0 +1,30 @@
+# include:
+#   - ./batect-bundle.yml
+
+containers:
+  storyshots:
+    dockerfile: Dockerfile.storyshots
+    build_directory: .
+    build_target: final
+    volumes:
+      - local: <{batect.project_directory}/sample-storybook/storyshots
+        container: /storyshots/storyshots.spec.ts-snapshots
+    run_as_current_user:
+      enabled: true
+      home_directory: /storyshots
+
+  storybook-server:
+    image: nginx:alpine
+    volumes:
+      - local: <{batect.project_directory}/sample-storybook/storybook-static
+        container: /usr/share/nginx/html
+    ports:
+      - local: 6006
+        container: 80
+
+tasks:
+  storyshots:
+    dependencies:
+      - storybook-server
+    run:
+      container: storyshots

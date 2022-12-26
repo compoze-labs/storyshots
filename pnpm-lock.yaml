@@ -3,7 +3,10 @@ lockfileVersion: 5.4
 importers:
 
   .:
-    specifiers: {}
+    specifiers:
+      '@playwright/test': ^1.29.1
+    devDependencies:
+      '@playwright/test': 1.29.1
 
   sample-storybook:
     specifiers:
@@ -2181,6 +2184,15 @@ packages:
     dependencies:
       mkdirp: 1.0.4
       rimraf: 3.0.2
+    dev: true
+
+  /@playwright/test/1.29.1:
+    resolution: {integrity: sha512-iQxk2DX5U9wOGV3+/Jh9OHPsw5H3mleUL2S4BgQuwtlAfK3PnKvn38m4Rg9zIViGHVW24opSm99HQm/UFLEy6w==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dependencies:
+      '@types/node': 16.18.10
+      playwright-core: 1.29.1
     dev: true
 
   /@pmmmwh/react-refresh-webpack-plugin/0.5.10_ohj47mxwagpoxvu7nhhwxzphqm:
@@ -11434,6 +11446,12 @@ packages:
     dependencies:
       find-up: 3.0.0
     dev: false
+
+  /playwright-core/1.29.1:
+    resolution: {integrity: sha512-20Ai3d+lMkWpI9YZYlxk8gxatfgax5STW8GaMozAHwigLiyiKQrdkt7gaoT9UQR8FIVDg6qVXs9IoZUQrDjIIg==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
 
   /pnp-webpack-plugin/1.6.4_typescript@4.9.4:
     resolution: {integrity: sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==}

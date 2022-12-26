@@ -1,4 +1,18 @@
-FROM mcr.microsoft.com/playwright:v1.29.0-focal as builder
+FROM mcr.microsoft.com/playwright:v1.29.1-focal as final
 
+RUN useradd -ms /bin/bash playwright-user 
+RUN mkdir -p /storyshots
+RUN chown playwright-user /storyshots
+RUN npm install -g pnpm
 
+COPY playwright.config.storyshots.ts /storyshots
+COPY storyshots.spec.ts /storyshots
+COPY package.json /storyshots
+COPY pnpm-lock.yaml /storyshots
 
+WORKDIR /storyshots
+RUN pnpm install --frozen-lockfile
+
+USER playwright-user
+
+CMD [ "npx", "playwright", "test", "--config=/storyshots/playwright.config.storyshots.ts" ]
