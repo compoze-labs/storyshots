@@ -7,9 +7,11 @@ on:
       - main
 
 jobs:
-  push_to_registry:
-    name: Push Docker image to Docker Hub
+  push_ci_image_to_registry:
+    name: Push CI Image to Docker Hub
     runs-on: ubuntu-latest
+    outputs:
+      ciImageTag: ${{ steps.meta.outputs.tags[0] }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -36,3 +38,33 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  test_ci_image:
+    name: Test CI Image
+    runs-on: ubuntu-latest
+    needs: push_ci_image_to_registry
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Set up PNPM
+        uses: pnpm/action-setup@v2.2.2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install PNPM packages
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook
+        run: pnpm -F sample-storybook build-storybook
+
+      - name: Run Storyshots
+        env:
+          STORYSHOTS_RESULTS_DIR: sample-storybook/storyshots
+          STORYBOOK_STATIC_DIR: sample-storybook/storybook-static
+        run: |
+          ./batect --override-image storyshots=eichelkrautadam/storyshots:${{ needs.jobs.push_ci_image_to_registry.outputs.ciImageTag }} storyshots
