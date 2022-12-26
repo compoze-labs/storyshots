@@ -11,7 +11,7 @@ jobs:
     name: Push CI Image to Docker Hub
     runs-on: ubuntu-latest
     outputs:
-      ciImageTag: ${{ steps.meta.outputs.tags[0] }}
+      ciImageTag: ${{ steps.meta.outputs.tags }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -69,4 +69,4 @@ jobs:
           STORYSHOTS_RESULTS_DIR: sample-storybook/storyshots
           STORYBOOK_STATIC_DIR: sample-storybook/storybook-static
         run: |
-          ./batect --override-image storyshots=eichelkrautadam/storyshots:${{ needs.jobs.push_ci_image_to_registry.outputs.ciImageTag }} storyshots
+          ./batect --override-image storyshots=eichelkrautadam/storyshots:${{ needs.push_ci_image_to_registry.outputs.ciImageTag }} storyshots
