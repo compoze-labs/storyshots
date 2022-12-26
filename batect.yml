@@ -1,25 +1,8 @@
 include:
   - ./batect-bundle.yml
 
-containers:
-  local-storyshots:
-    build_directory: .
-    dockerfile: Dockerfile.storyshots
-    build_target: final
-    volumes:
-      - local: ${STORYSHOTS_RESULTS_DIR}
-        container: /storyshots/storyshots.spec.ts-snapshots
-    run_as_current_user:
-      enabled: true
-      home_directory: /storyshots
-
 tasks:
-  local-storyshots:
-    dependencies:
-      - storybook-server
-    run:
-      container: local-storyshots
-
+  # helpful for debugging the built version of the storybook after a test
   storybook:
     run:
       container: storybook-server
