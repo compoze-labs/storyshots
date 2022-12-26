@@ -1,0 +1,25 @@
+containers:
+  storyshots:
+    image: eichelkrautadam/storyshots:latest
+    volumes:
+      - local: ${STORYSHOTS_RESULTS_DIR}
+        container: /storyshots/storyshots.spec.ts-snapshots
+    run_as_current_user:
+      enabled: true
+      home_directory: /storyshots
+
+  storybook-server:
+    image: nginx:alpine
+    volumes:
+      - local: ${STORYBOOK_STATIC_DIR}
+        container: /usr/share/nginx/html
+    ports:
+      - local: 6006
+        container: 80
+
+tasks:
+  storyshots:
+    dependencies:
+      - storybook-server
+    run:
+      container: storyshots

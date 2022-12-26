@@ -26,8 +26,8 @@ jobs:
         with:
           images: eichelkrautadam/storyshots
           tags: |
-            latest
             type=sha
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
