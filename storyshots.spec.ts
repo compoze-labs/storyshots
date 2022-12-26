@@ -48,7 +48,7 @@ test.describe('our visual regressions', () => {
             })
 
             expect(image).toMatchSnapshot(`${story}.jpeg`, {
-                maxDiffPixelRatio: 0.1,
+                maxDiffPixelRatio: 0,
             })
         }
     })
