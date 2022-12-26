@@ -1,4 +1,4 @@
-name: Publish Storyshots
+name: Create Storyshots Release
 
 on:
   workflow_dispatch:
