@@ -2,6 +2,8 @@ name: Publish Storyshots
 
 on:
   workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
   publish:
@@ -24,6 +26,7 @@ jobs:
           images: eichelkrautadam/storyshots
           tags: |
             type=sha
+            type=semver,pattern={{version}},value=v${GITHUB_REF}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
