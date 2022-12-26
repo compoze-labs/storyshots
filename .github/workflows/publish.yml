@@ -7,11 +7,39 @@ on:
       - main
 
 jobs:
-  push_ci_image_to_registry:
+
+  test:
+    name: Test Storyshots
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Set up PNPM
+        uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7.17.1
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install PNPM packages
+        run: pnpm install --frozen-lockfile
+
+      - name: Install shellspec
+        run: curl -fsSL https://git.io/shellspec | sh -s -- --yes
+
+      - name: Run Storyshots Tests
+        run: |
+          pnpm test:local
+
+  publish:
     name: Push CI Image to Docker Hub
     runs-on: ubuntu-latest
-    outputs:
-      ciImageTag: ${{ steps.meta.outputs.tags }}
+    needs: test
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -38,32 +66,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-  test_ci_image:
-    name: Test CI Image
-    runs-on: ubuntu-latest
-    needs: push_ci_image_to_registry
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3
-
-      - name: Set up PNPM
-        uses: pnpm/action-setup@v2.2.2
-        with:
-          version: 7.17.1
-
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
-
-      - name: Install PNPM packages
-        run: pnpm install --frozen-lockfile
-
-      - name: Install shellspec
-        run: wget -O- https://git.io/shellspec | sh
-
-      - name: Run Storyshots Tests
-        run: |
-          IMAGE=${{ needs.push_ci_image_to_registry.outputs.ciImageTag }} pnpm test
