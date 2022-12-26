@@ -62,7 +62,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build Storybook
-        run: pnpm -F sample-storybook build-storybook
+        run: pnpm -F sample build-storybook
 
       - name: Run Storyshots
         env:
