@@ -13,6 +13,7 @@ Describe 'the bundle'
     It 'can assess the baseline of the storybooks visual regressions'
       When run storyshots
       The output should include '1 passed'
+      The stderr should match pattern '*'
       The status should be success
     End
 
@@ -35,6 +36,7 @@ Describe 'the bundle'
     It 'can detect when the baseline has deviated and show the diffs'
       When run storyshots
       The output should include '1 failed'
+      The stderr should match pattern '*'
       The path ${STORYSHOTS_RESULTS_DIR}/test-results/storyshots-our-visual-regressions-should-match-the-existing-specs-chromium/example-button--primary-diff.jpeg should be file
       The status should be failure
     End
