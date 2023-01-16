@@ -38,6 +38,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Update bundle
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           sed -i '/eichelkrautadam\/storyshots/c\    image: eichelkrautadam/storyshots:${{ github.ref_name }}' batect-bundle.yml
           git add batect-bundle.yml
