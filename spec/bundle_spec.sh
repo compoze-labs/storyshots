@@ -51,6 +51,8 @@ Describe 'the bundle'
     It 'can detect when the baseline has deviated and show the diffs'
       When run storyshots
       The output should include '1 failed'
+      The output should include 'example-button--primary'
+      The output should include 'example-page--logged-out'
       The stderr should match pattern '*'
       The path ${STORYSHOTS_RESULTS_DIR}/test-results/storyshots-our-visual-regressions-should-match-the-existing-specs-chromium/example-button--primary-diff.jpeg should be file
       The status should be failure

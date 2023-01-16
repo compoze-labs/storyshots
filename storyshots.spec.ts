@@ -34,8 +34,8 @@ test.describe('our visual regressions', () => {
             }
         }
 
+        let anyStoryFailed = false
         for (const story of storiesList) {
-            console.log(story)
             await page.goto(
                 `http://storybook-server:80/iframe.html?viewMode=story&id=${story}`,
                 { waitUntil: 'domcontentloaded' }
@@ -47,9 +47,21 @@ test.describe('our visual regressions', () => {
                 fullPage: true,
             })
 
-            expect(image).toMatchSnapshot(`${story}.jpeg`, {
-                maxDiffPixelRatio: 0,
-            })
+            let storyFailed = false
+            try {
+                expect(image).toMatchSnapshot(`${story}.jpeg`, {
+                    maxDiffPixelRatio: 0,
+                })
+            } catch (err) {
+                storyFailed = true
+                anyStoryFailed = true
+            }
+            if (storyFailed) {
+                console.log(`❌ ${story}`)
+            } else {
+                console.log(`✅ ${story}`)
+            }
         }
+        expect(anyStoryFailed, "A visual regression did not pass, review the diffs and either update the baselines or fix the issue").toBe(false)
     })
 })
