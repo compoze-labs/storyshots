@@ -26,7 +26,7 @@ jobs:
           images: eichelkrautadam/storyshots
           tags: |
             type=sha
-            type=semver,pattern={{version}},value=${GITHUB_REF}
+            type=semver,pattern={{version}},value=${GITHUB_REF_NAME}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
