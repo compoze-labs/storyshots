@@ -1,6 +1,6 @@
 containers:
   storyshots:
-    image: eichelkrautadam/storyshots:latest
+    image: eichelkrautadam/storyshots:0.5.7
     volumes:
       - local: ${STORYSHOTS_RESULTS_DIR}
         container: /storyshots/storyshots.spec.ts-snapshots
