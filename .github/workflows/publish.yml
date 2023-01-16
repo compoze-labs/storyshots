@@ -2,9 +2,8 @@ name: Publish Storyshots
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - '*'
+  release:
+    types: [published]
 
 jobs:
   publish:
