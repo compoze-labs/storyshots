@@ -38,7 +38,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Update bundle
-        script: |
+        run: |
           sed -i '/eichelkrautadam\/storyshots/c\    image: eichelkrautadam/storyshots:${{ github.ref_name }}' batect-bundle.yml
           git add batect-bundle.yml
           git commit -m "ci: update bundle to ${{ github.ref_name }}"
