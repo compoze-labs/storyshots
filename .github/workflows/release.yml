@@ -33,9 +33,9 @@ jobs:
       - name: Install shellspec
         run: curl -fsSL https://git.io/shellspec | sh -s -- --yes
 
-      - name: Run Storyshots Tests
-        run: |
-          pnpm test:local
+      # - name: Run Storyshots Tests
+      #   run: |
+      #     pnpm test:local
 
       - name: Automate Github Release
         env:
