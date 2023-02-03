@@ -2,9 +2,7 @@ containers:
   storyshots:
     image: eichelkrautadam/storyshots:0.3.0
     volumes:
-      - local: ${STORYSHOTS_RESULTS_DIR}
-        container: /storyshots/storyshots.spec.ts-snapshots
-      - local: ${STORYSHOTS_RESULTS_DIR}/test-results
+      - local: <{batect.project_directory}/${STORYSHOTS_RESULTS_DIR:-test-results}
         container: /storyshots/test-results
     run_as_current_user:
       enabled: true
@@ -13,7 +11,7 @@ containers:
   storybook-server:
     image: nginx:alpine
     volumes:
-      - local: ${STORYBOOK_STATIC_DIR}
+      - local: <{batect.project_directory}/${STORYBOOK_STATIC_DIR:-storybook-static}
         container: /usr/share/nginx/html
     ports:
       - local: 6006
