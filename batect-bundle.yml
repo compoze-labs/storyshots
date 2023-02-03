@@ -1,8 +1,10 @@
 containers:
   storyshots:
-    image: eichelkrautadam/storyshots:0.3.0
+    image: eichelkrautadam/storyshots:0.3.1
     volumes:
-      - local: <{batect.project_directory}/${STORYSHOTS_RESULTS_DIR:-test-results}
+      - local: <{batect.project_directory}/${STORYSHOTS_RESULTS_DIR:-storyshots}
+        container: /storyshots/storyshots
+      - local: <{batect.project_directory}/${STORYSHOTS_RESULTS_DIR:-storyshots}/test-results
         container: /storyshots/test-results
     run_as_current_user:
       enabled: true
