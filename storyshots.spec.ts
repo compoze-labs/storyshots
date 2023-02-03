@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('our visual regressions', () => {
-    test('should match the existing specs', async ({ page }, testConfig) => {
+test.describe.only('visual regressions', () => {
+    test('specs', async ({ page }, testConfig) => {
         testConfig.snapshotSuffix = ''
 
         await page.goto('http://storybook-server:80', {
