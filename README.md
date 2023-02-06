@@ -10,8 +10,8 @@ To include in a `batect.yml`, you need to add the following block:
 ```yml
 include:
   - type: git
-    repo: git@github.com:compoze-labs/storyshots.git
-    ref: 0.3.0
+    repo: https://github.com/compoze-labs/storyshots.git
+    ref: 0.3.1
 ```
  
 Once included, you will now have access to two tasks: `./batect storyshots` and `./batect storyshots-update`. However, these two commands will also need to know where to find your pre-built Storybook directory.
@@ -20,5 +20,8 @@ Once included, you will now have access to two tasks: `./batect storyshots` and 
 npm run build-storybook
 
 # create first-time baselines
-STORYSHOTS_RESULTS_DIR=./ STORYBOOK_STATIC_DIR=./storybook-static ./batect storyshots-update
+STORYSHOTS_RESULTS_DIR=./storyshots STORYBOOK_STATIC_DIR=./storybook-static ./batect storyshots-update
+
+# test against baselines
+STORYSHOTS_RESULTS_DIR=./storyshots STORYBOOK_STATIC_DIR=./storybook-static ./batect storyshots
 ```
