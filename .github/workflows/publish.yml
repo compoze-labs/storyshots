@@ -45,10 +45,10 @@ jobs:
         run: |
           git checkout main
           sed -i '/eichelkrautadam\/storyshots/c\    image: eichelkrautadam/storyshots:${{ github.ref_name }}' batect-bundle.yml
-          git add batect-bundle.yml
           git config --global user.name 'github_actions'
           git config --global user.email 'github_actions@users.noreply.github.com'
-          git commit --amend --no-edit -m "ci: update bundle to ${{ github.ref_name }}"
+          git add batect-bundle.yml
+          git commit --amend --no-edit
           git tag --force ${{ github.ref_name }} HEAD
           git push -f origin HEAD:main
           git push --force --tags
