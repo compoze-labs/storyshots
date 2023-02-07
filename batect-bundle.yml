@@ -1,6 +1,6 @@
 containers:
   storyshots:
-    image: eichelkrautadam/storyshots:0.3.1
+    image: eichelkrautadam/storyshots:0.3.2
     volumes:
       - local: <{batect.project_directory}/${STORYSHOTS_RESULTS_DIR:-storyshots}
         container: /storyshots/storyshots
@@ -15,9 +15,6 @@ containers:
     volumes:
       - local: <{batect.project_directory}/${STORYBOOK_STATIC_DIR:-storybook-static}
         container: /usr/share/nginx/html
-    ports:
-      - local: 6006
-        container: 80
 
 tasks:
   storyshots:
