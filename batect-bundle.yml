@@ -1,6 +1,6 @@
 containers:
   storyshots:
-    image: eichelkrautadam/storyshots:0.3.2
+    image: eichelkrautadam/storyshots:0.4.0
     volumes:
       - local: <{batect.project_directory}/${STORYSHOTS_RESULTS_DIR:-storyshots}
         container: /storyshots/storyshots
