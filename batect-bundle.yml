@@ -8,6 +8,9 @@ config_variables:
   staticDirectory:
     description: The path from the batect project root to the storybook static directory.
     default: storybook-static
+  storybookUrl:
+    description: The URL of the storybook server.
+    default: http://storybook-server:80
 
 containers:
   storyshots:
@@ -21,6 +24,7 @@ containers:
         container: /storyshots/.storyshots.json
     environment:
       STORYSHOTS_STORY: ${STORYSHOTS_STORY:-}
+      STORYBOOK_URL: <{storybookUrl}
     run_as_current_user:
       enabled: true
       home_directory: /storyshots

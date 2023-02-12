@@ -1,0 +1,4 @@
+resultsDirectory: sample-storybook/storyshots
+configPath: sample-storybook/.storyshots.config.json
+staticDirectory: sample-storybook/storybook-static
+storybookUrl: http://host-gateway:6006
