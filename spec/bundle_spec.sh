@@ -1,34 +1,45 @@
+TEST_RESULTS="test-results-local/test-results/storyshots-visual-regressions-specs-chromium"
+
 Describe 'the bundle'
 
   reset_repo() {
-    rm -rf ${STORYSHOTS_RESULTS_DIR}/test-results
+    rm -rf test-results-local
 
     git checkout sample-storybook/src/stories/Button.stories.tsx > /dev/null 2>&1
-
-    git checkout ${STORYSHOTS_RESULTS_DIR}/example-button--large.jpeg > /dev/null 2>&1
-    git checkout ${STORYSHOTS_RESULTS_DIR}/example-button--primary.jpeg > /dev/null 2>&1
-    git checkout ${STORYSHOTS_RESULTS_DIR}/example-button--secondary.jpeg > /dev/null 2>&1
-    git checkout ${STORYSHOTS_RESULTS_DIR}/example-button--small.jpeg > /dev/null 2>&1
   }
 
   storyshots() {
-    ./batect --override-image storyshots=${IMAGE} storyshots
+    ./batect --override-image storyshots=${IMAGE} --config-vars-file spec/batect.test.yml storyshots
   }
 
   storyshots_update() {
-    ./batect --override-image storyshots=${IMAGE} storyshots-update
+    ./batect --override-image storyshots=${IMAGE} --config-vars-file spec/batect.test.yml storyshots-update
   }
 
+  setup() { 
+    reset_repo
+    pnpm -F sample build-storybook > /dev/null 2>&1
+  }
+
+  BeforeAll 'setup'
+  AfterAll 'reset_repo'
+
   Describe 'happy paths'
-    setup() { 
-      reset_repo
-      pnpm -F sample build-storybook > /dev/null 2>&1
-    }
-    BeforeAll 'setup'
+
+    It 'can generate a new set of baselines and fail if they do not exist'
+      When run storyshots
+      The output should include '1 failed'
+      The output should include 'example-button--primary'
+      The output should include 'example-button--secondary'
+      The stderr should match pattern '*'
+      The status should be failure
+    End
 
     It 'can assess the baseline of the storybooks visual regressions'
       When run storyshots
       The output should include '1 passed'
+      The output should include 'example-button--primary'
+      The output should include 'example-page--logged-out'
       The stderr should match pattern '*'
       The status should be success
     End
@@ -36,17 +47,12 @@ Describe 'the bundle'
   End
 
   Describe 'failure cases'
-  
-    setup() { 
-      reset_repo
+
+    setup_new_diffs() { 
       git apply spec/ensure_failure.patch
       pnpm -F sample build-storybook > /dev/null 2>&1
     }
-    cleanup() {
-      reset_repo
-    }
-    BeforeAll 'setup'
-    AfterAll 'cleanup'
+    BeforeAll 'setup_new_diffs'
 
     It 'can detect when the baseline has deviated and show the diffs'
       When run storyshots
@@ -54,7 +60,7 @@ Describe 'the bundle'
       The output should include 'example-button--primary'
       The output should include 'example-page--logged-out'
       The stderr should match pattern '*'
-      The path ${STORYSHOTS_RESULTS_DIR}/test-results/storyshots-visual-regressions-specs-chromium/example-button--primary-diff.jpeg should be file
+      The path ${TEST_RESULTS}/example-button--primary-diff.jpeg should be file
       The status should be failure
     End
 
