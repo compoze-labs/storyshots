@@ -7,7 +7,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "STORYBOOK_STATIC_DIR=sample-storybook/storybook-static STORYSHOTS_RESULTS_DIR=sample-storybook/storyshots ./batect --override-image storyshots=local-storyshots storyshots",
+    "start": "./batect --override-image storyshots=local-storyshots storyshots",
     "start:update": "STORYBOOK_STATIC_DIR=sample-storybook/storybook-static STORYSHOTS_RESULTS_DIR=sample-storybook/storyshots ./batect --override-image storyshots=local-storyshots storyshots-update",
     "build": "docker build -t local-storyshots -f Dockerfile.storyshots .",
     "test:local": "pnpm build && IMAGE=local-storyshots pnpm test",

@@ -1,11 +1,24 @@
+config_variables:
+  resultsDirectory:
+    description: The directory from the batect project root where the storyshots screenshots will be stored.
+    default: storyshots
+  configPath:
+    description: The path from the batect project root to the storyshots config file.
+    default: .storyshots.config.json
+  staticDirectory:
+    description: The path from the batect project root to the storybook static directory.
+    default: storybook-static
+
 containers:
   storyshots:
     image: eichelkrautadam/storyshots:0.4.0
     volumes:
-      - local: <{batect.project_directory}/${STORYSHOTS_RESULTS_DIR:-storyshots}
+      - local: <{batect.project_directory}/<{resultsDirectory}
         container: /storyshots/storyshots
-      - local: <{batect.project_directory}/${STORYSHOTS_RESULTS_DIR:-storyshots}/test-results
+      - local: <{batect.project_directory}/<{resultsDirectory}/test-results
         container: /storyshots/test-results
+      - local: <{batect.project_directory}/<{configPath}
+        container: /storyshots/.storyshots.json
     run_as_current_user:
       enabled: true
       home_directory: /storyshots
@@ -13,7 +26,7 @@ containers:
   storybook-server:
     image: nginx:alpine
     volumes:
-      - local: <{batect.project_directory}/${STORYBOOK_STATIC_DIR:-storybook-static}
+      - local: <{batect.project_directory}/<{staticDirectory}
         container: /usr/share/nginx/html
 
 tasks:
