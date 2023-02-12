@@ -1,7 +1,12 @@
 import { expect, Page } from "@playwright/test"
 import { StorybookStory } from "./storyshots.types"
 
-export async function testStory(page: Page, { storyshot, url }: StorybookStory): Promise<Boolean> {
+export async function testStory(page: Page, { storyshot, url, ignore }: StorybookStory): Promise<Boolean> {
+    if (ignore) {
+        console.log(`💤 ${storyshot} (ignored via configuration)`)
+        return true
+    }
+
     await page.goto(url, { waitUntil: 'domcontentloaded' })
 
     const image = await page.screenshot({

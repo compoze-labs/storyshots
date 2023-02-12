@@ -21,7 +21,7 @@ containers:
       - local: <{batect.project_directory}/<{resultsDirectory}/test-results
         container: /storyshots/test-results
       - local: <{batect.project_directory}/<{configPath}
-        container: /storyshots/.storyshots.json
+        container: /storyshots/.storyshots.json:ro
     environment:
       STORYSHOTS_STORY: ${STORYSHOTS_STORY:-}
       STORYBOOK_URL: <{storybookUrl}

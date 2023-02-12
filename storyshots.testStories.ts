@@ -2,7 +2,7 @@ import { Page, test } from '@playwright/test'
 import { storyshotsEnv } from './storyshots.env'
 import { StorybookStory } from './storyshots.types'
 
-const { singleStory } = storyshotsEnv()
+const { singleStory, ignoreStories } = storyshotsEnv()
 
 export function testStories(testFunc: (page: Page, stories: StorybookStory[]) => Promise<void>) {
     test('specs', async ({ page }, testConfig) => {
@@ -24,6 +24,13 @@ export function testStories(testFunc: (page: Page, stories: StorybookStory[]) =>
                 storiesList.push(...stories)
             }
         }
+
+        // set the ignore flag on all stories that are ignored
+        storiesList.forEach((story) => {
+            if (ignoreStories.find((ignoreStory) => ignoreStory.title === story.title)) {
+                story.ignore = true
+            }
+        })
 
         await testFunc(page, storiesList)
     })

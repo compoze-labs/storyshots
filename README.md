@@ -56,3 +56,14 @@ Secondary.args = {
 };
 ```
 > Be careful not to keep this around in CI! Might defeat the purpose of visual regressions :)
+
+## Ignoring Stories
+Sometimes, stories can just be too fiddly to visually regression test. In these cases, you may wish to ignore them entirely! To do so, you must create a `.storyshots.config.json` in your root repository (if you wish to name it something else, that's fine, you just need to configure the config var `configPath` going into the batect command to change the path). Inside, you can add an array like so:
+```json
+{
+    "ignoreStories": [
+        "your-story--to-ignore"
+    ]   
+}
+```
+> You will still see it in the output, labelled as ignored via configuration.

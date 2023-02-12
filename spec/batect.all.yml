@@ -1,3 +1,3 @@
 resultsDirectory: test-results-local
-configPath: sample-storybook/.storyshots.config.json
+configPath: spec/.storyshots.all.config.json
 staticDirectory: sample-storybook/storybook-static

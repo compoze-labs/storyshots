@@ -1,10 +1,12 @@
 export class StorybookStory {
     title: string
     target: boolean
+    ignore: boolean
     
     constructor(title: string, target: boolean) {
         this.title = title
         this.target = target
+        this.ignore = false
     }
 
     static fromString(title: string): StorybookStory {

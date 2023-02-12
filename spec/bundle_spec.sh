@@ -12,19 +12,23 @@ Describe 'the bundle'
   }
 
   run_batect() {
-    ./batect --override-image storyshots=${IMAGE} --config-vars-file spec/batect.test.yml $1
+    ./batect --override-image storyshots=${IMAGE} --config-vars-file $2 $1
   }
 
-  storyshots_full() {
-    run_batect storyshots
+  storyshots_all() {
+    run_batect storyshots spec/batect.all.yml
+  }
+
+  storyshots_with_ignore() {
+    run_batect storyshots spec/batect.ignore.yml
   }
 
   storyshots_single() {
-    STORYSHOTS_STORY="example-button--primary" run_batect storyshots
+    STORYSHOTS_STORY="example-button--primary" run_batect storyshots spec/batect.ignore.yml
   }
 
   storyshots_update() {
-    run_batect storyshots-update
+    run_batect storyshots-update spec/batect.ignore.yml
   }
 
   setup() { 
@@ -38,19 +42,20 @@ Describe 'the bundle'
   Describe 'happy paths'
 
     It 'can generate a new set of baselines and fail if they do not exist'
-      When run storyshots_full
+      When run storyshots_all
       The output should include '1 failed'
-      The output should include 'example-button--primary.jpeg'
-      The output should include 'example-button--secondary.jpeg'
+      The output should include '✅ example-button--primary.jpeg'
+      The output should include '✅ example-button--secondary.jpeg'
       The stderr should match pattern '*'
       The status should be failure
     End
 
     It 'can assess the baselines of a full storybook`s visual regressions'
-      When run storyshots_full
+      When run storyshots_with_ignore
       The output should include '1 passed'
-      The output should include 'example-button--primary.jpeg'
-      The output should include 'example-page--logged-out.jpeg'
+      The output should include '✅ example-button--primary.jpeg'
+      The output should include '✅ example-page--logged-out.jpeg'
+      The output should include '💤 example-animated--animated-in-circle.jpeg (ignored via configuration)'
       The stderr should match pattern '*'
       The status should be success
     End
@@ -58,8 +63,8 @@ Describe 'the bundle'
     It 'can assess the baseline of a single storyshot'
       When run storyshots_single
       The output should include '1 passed'
-      The output should include 'example-button--primary.jpeg'
-      The output should not include 'example-page--logged-out.jpeg'
+      The output should include '✅ example-button--primary.jpeg'
+      The output should not include '✅ example-page--logged-out.jpeg'
       The stderr should match pattern '*'
       The status should be success
     End
@@ -73,10 +78,10 @@ Describe 'the bundle'
       AfterAll 'reset_button_stories'
 
       It 'can assess the baseline of a single storyshot by title'
-        When run storyshots_full
+        When run storyshots_with_ignore
         The output should include '1 passed'
-        The output should include 'example-button--primary.jpeg'
-        The output should not include 'example-page--logged-out.jpeg'
+        The output should include '✅ example-button--primary.jpeg'
+        The output should not include '✅ example-page--logged-out.jpeg'
         The stderr should match pattern '*'
         The status should be success
       End
@@ -93,10 +98,10 @@ Describe 'the bundle'
     BeforeAll 'setup_new_diffs'
 
     It 'can detect when the baseline has deviated and show the diffs'
-      When run storyshots_full
+      When run storyshots_with_ignore
       The output should include '1 failed'
-      The output should include 'example-button--primary.jpeg'
-      The output should include 'example-page--logged-out.jpeg'
+      The output should include '❌ example-button--primary.jpeg'
+      The output should include '✅ example-page--logged-out.jpeg'
       The stderr should match pattern '*'
       The path ${TEST_RESULTS}/example-button--primary-diff.jpeg should be file
       The status should be failure
