@@ -7,10 +7,10 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "./batect --override-image storyshots=local-storyshots storyshots",
-    "start:single": "STORYSHOTS_STORY=example-button--primary ./batect --override-image storyshots=local-storyshots storyshots",
-    "start:local": "./batect --override-image storyshots=local-storyshots --config-vars-file=batect.target-local.yml storyshots",
-    "start:update": "./batect --override-image storyshots=local-storyshots storyshots-update",
+    "start": "pnpm build && ./batect --override-image storyshots=local-storyshots storyshots",
+    "start:single": "pnpm build && STORYSHOTS_STORY=example-button--primary ./batect --override-image storyshots=local-storyshots storyshots",
+    "start:local": "pnpm build && ./batect --override-image storyshots=local-storyshots --config-vars-file=batect.target-local.yml storyshots",
+    "start:update": "pnpm build && ./batect --override-image storyshots=local-storyshots storyshots-update",
     "build": "docker build -t local-storyshots -f Dockerfile.storyshots .",
     "test:local": "pnpm build && IMAGE=local-storyshots pnpm test",
     "test": "bash shellspec"
