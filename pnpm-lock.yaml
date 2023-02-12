@@ -5,8 +5,10 @@ importers:
   .:
     specifiers:
       '@playwright/test': ^1.29.1
+      '@types/node': ^16.18.10
     devDependencies:
       '@playwright/test': 1.29.1
+      '@types/node': 16.18.10
 
   sample-storybook:
     specifiers:

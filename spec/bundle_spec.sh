@@ -16,6 +16,10 @@ Describe 'the bundle'
     run_batect storyshots
   }
 
+  storyshots_single() {
+    STORYSHOTS_STORY="example-button--primary" run_batect storyshots
+  }
+
   storyshots_update() {
     run_batect storyshots-update
   }
@@ -44,6 +48,15 @@ Describe 'the bundle'
       The output should include '1 passed'
       The output should include 'example-button--primary'
       The output should include 'example-page--logged-out'
+      The stderr should match pattern '*'
+      The status should be success
+    End
+
+    It 'can assess the baseline of a single storyshot'
+      When run storyshots_single
+      The output should include '1 passed'
+      The output should include 'example-button--primary'
+      The output should not include 'example-page--logged-out'
       The stderr should match pattern '*'
       The status should be success
     End

@@ -19,6 +19,8 @@ containers:
         container: /storyshots/test-results
       - local: <{batect.project_directory}/<{configPath}
         container: /storyshots/.storyshots.json
+    environment:
+      STORYSHOTS_STORY: ${STORYSHOTS_STORY:-}
     run_as_current_user:
       enabled: true
       home_directory: /storyshots

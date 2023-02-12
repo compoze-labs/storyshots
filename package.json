@@ -8,12 +8,14 @@
   "license": "ISC",
   "scripts": {
     "start": "./batect --override-image storyshots=local-storyshots storyshots",
+    "start:single": "STORYSHOTS_STORY=example-button--primary ./batect --override-image storyshots=local-storyshots storyshots",
     "start:update": "./batect --override-image storyshots=local-storyshots storyshots-update",
     "build": "docker build -t local-storyshots -f Dockerfile.storyshots .",
     "test:local": "pnpm build && IMAGE=local-storyshots pnpm test",
     "test": "bash shellspec"
   },
   "devDependencies": {
-    "@playwright/test": "^1.29.1"
+    "@playwright/test": "^1.29.1",
+    "@types/node": "^16.18.10"
   }
 }

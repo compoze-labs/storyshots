@@ -33,3 +33,10 @@ npm run build-storybook
 # Re-running should result in a passing command, given that your stories are consistently rendered
 ./batect storyshots
 ```
+
+## Target Single Stories
+To aid in speeding up faster feedback during development, you might wish to target only a single story at a time. One option is to use an environment variable `STORYSHOTS_STORY` being sent to the command to target a single story:
+```bash
+# The name should match the baseline story title file:
+STORYSHOTS_STORY=example-button--primary ./batect storyshots
+```

@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test"
-import { StorybookStory } from "./storyshots.testStories"
+import { StorybookStory } from "./storyshots.types"
 
 export async function testStory(page: Page, { title }: StorybookStory): Promise<Boolean> {
     await page.goto(

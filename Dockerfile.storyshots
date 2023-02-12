@@ -9,6 +9,8 @@ COPY playwright.config.storyshots.ts /storyshots
 COPY storyshots.spec.ts /storyshots
 COPY storyshots.testStories.ts /storyshots
 COPY storyshots.testStory.ts /storyshots
+COPY storyshots.env.ts /storyshots
+COPY storyshots.types.ts /storyshots
 COPY package.json /storyshots
 COPY pnpm-lock.yaml /storyshots
 
