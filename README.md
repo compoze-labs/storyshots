@@ -40,3 +40,19 @@ To aid in speeding up faster feedback during development, you might wish to targ
 # The name should match the baseline story title file:
 STORYSHOTS_STORY=example-button--primary ./batect storyshots
 ```
+
+If you're working in an existing Storybook, it might be helpful to target a single story via changing the title. If you title a story with the prefix `StoryshotsTarget...`, Storyshots will only look at that one file.
+```ts
+// Will only target this one
+export const StoryshotsTargetButton = Template.bind({});
+StoryshotsTargetButton.args = {
+  ...
+};
+
+// Will not run tests against this one
+export const Secondary = Template.bind({});
+Secondary.args = {
+  ...
+};
+```
+> Be careful not to keep this around in CI! Might defeat the purpose of visual regressions :)

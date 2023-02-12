@@ -1,11 +1,8 @@
 import { expect, Page } from "@playwright/test"
 import { StorybookStory } from "./storyshots.types"
 
-export async function testStory(page: Page, { title }: StorybookStory): Promise<Boolean> {
-    await page.goto(
-        `/iframe.html?viewMode=story&id=${title}`,
-        { waitUntil: 'domcontentloaded' }
-    )
+export async function testStory(page: Page, { storyshot, url }: StorybookStory): Promise<Boolean> {
+    await page.goto(url, { waitUntil: 'domcontentloaded' })
 
     const image = await page.screenshot({
         type: 'jpeg',
@@ -15,16 +12,16 @@ export async function testStory(page: Page, { title }: StorybookStory): Promise<
 
     let storyPassed = true
     try {
-        expect(image).toMatchSnapshot(`${title}.jpeg`, {
+        expect(image).toMatchSnapshot(storyshot, {
             maxDiffPixelRatio: 0,
         })
     } catch (err) {
         storyPassed = false
     }
     if (storyPassed) {
-        console.log(`✅ ${title}`)
+        console.log(`✅ ${storyshot}`)
     } else {
-        console.log(`❌ ${title}`)
+        console.log(`❌ ${storyshot}`)
     }
     return storyPassed
 }

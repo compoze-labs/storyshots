@@ -17,7 +17,12 @@ export function testStories(testFunc: (page: Page, stories: StorybookStory[]) =>
             storiesList.push(singleStory)
         } else {
             const stories = await getStoriesList(page)
-            storiesList.push(...stories)
+            const targets = stories.filter((story) => story.target)
+            if (targets.length > 0) {
+                storiesList.push(...targets)
+            } else {
+                storiesList.push(...stories)
+            }
         }
 
         await testFunc(page, storiesList)
@@ -49,9 +54,7 @@ async function getStoriesList(page: Page): Promise<StorybookStory[]> {
         const currentStory = stories.nth(j)
         const title = await currentStory.getAttribute('data-item-id')
         if (title) {
-            storiesList.push({
-                title,
-            })
+            storiesList.push(StorybookStory.fromString(title))
         }
     }
 

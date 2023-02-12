@@ -1,0 +1,16 @@
+diff --git a/sample-storybook/src/stories/Button.stories.tsx b/sample-storybook/src/stories/Button.stories.tsx
+index c331bd4..98ab3c3 100644
+--- a/sample-storybook/src/stories/Button.stories.tsx
++++ b/sample-storybook/src/stories/Button.stories.tsx
+@@ -16,9 +16,9 @@ export default {
+ // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
+ const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
+ 
+-export const Primary = Template.bind({});
++export const StoryshotsTargetPrimary = Template.bind({});
+ // More on args: https://storybook.js.org/docs/react/writing-stories/args
+-Primary.args = {
++StoryshotsTargetPrimary.args = {
+   primary: true,
+   label: 'Button',
+ };

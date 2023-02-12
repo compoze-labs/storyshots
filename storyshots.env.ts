@@ -9,9 +9,7 @@ export function storyshotsEnv(): StoryshotsEnvironment {
         singleStory: undefined,
     }
     if (process.env.STORYSHOTS_STORY) {
-        env.singleStory = {
-            title: process.env.STORYSHOTS_STORY,
-        }
+        env.singleStory = StorybookStory.fromString(process.env.STORYSHOTS_STORY)
     }
     return env
 }
