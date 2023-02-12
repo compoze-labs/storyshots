@@ -18,6 +18,7 @@ const config: PlaywrightTestConfig = {
     use: {
         screenshot: 'off',
         headless: true,
+        baseURL: 'http://storybook-server:80',
     },
     projects: [
         {

@@ -1,5 +1,5 @@
 TEST_RESULTS="test-results-local/test-results/storyshots-visual-regressions-specs-chromium"
-
+BATECT_STORYSHOTS="./batect --override-image storyshots=${IMAGE} --config-vars-file spec/batect.test.yml"
 Describe 'the bundle'
 
   reset_repo() {
@@ -8,12 +8,16 @@ Describe 'the bundle'
     git checkout sample-storybook/src/stories/Button.stories.tsx > /dev/null 2>&1
   }
 
-  storyshots() {
-    ./batect --override-image storyshots=${IMAGE} --config-vars-file spec/batect.test.yml storyshots
+  run_batect() {
+    ./batect --override-image storyshots=${IMAGE} --config-vars-file spec/batect.test.yml $1
+  }
+
+  storyshots_full() {
+    run_batect storyshots
   }
 
   storyshots_update() {
-    ./batect --override-image storyshots=${IMAGE} --config-vars-file spec/batect.test.yml storyshots-update
+    run_batect storyshots-update
   }
 
   setup() { 
@@ -27,7 +31,7 @@ Describe 'the bundle'
   Describe 'happy paths'
 
     It 'can generate a new set of baselines and fail if they do not exist'
-      When run storyshots
+      When run storyshots_full
       The output should include '1 failed'
       The output should include 'example-button--primary'
       The output should include 'example-button--secondary'
@@ -35,8 +39,8 @@ Describe 'the bundle'
       The status should be failure
     End
 
-    It 'can assess the baseline of the storybooks visual regressions'
-      When run storyshots
+    It 'can assess the baselines of a full storybook`s visual regressions'
+      When run storyshots_full
       The output should include '1 passed'
       The output should include 'example-button--primary'
       The output should include 'example-page--logged-out'
@@ -55,7 +59,7 @@ Describe 'the bundle'
     BeforeAll 'setup_new_diffs'
 
     It 'can detect when the baseline has deviated and show the diffs'
-      When run storyshots
+      When run storyshots_full
       The output should include '1 failed'
       The output should include 'example-button--primary'
       The output should include 'example-page--logged-out'
