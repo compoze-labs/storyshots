@@ -54,9 +54,11 @@ jobs:
         run: |
           git checkout main
           sed -i '/eichelkrautadam\/storyshots/c\    image: eichelkrautadam/storyshots:${{ github.ref_name }}' batect-bundle.yml
+          sed -i '/ref:/c\    ref: ${{ github.ref_name }}' README.md
           git config --global user.name 'github_actions'
           git config --global user.email 'github_actions@users.noreply.github.com'
           git add batect-bundle.yml
+          git add README.md
           git commit --amend --no-edit
           git tag --force ${{ github.ref_name }} HEAD
           git push -f origin HEAD:main
