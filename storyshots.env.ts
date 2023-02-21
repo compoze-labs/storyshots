@@ -5,6 +5,7 @@ import fs from 'fs'
 export interface StoryshotsEnvironment {
     singleStory?: StorybookStory
     ignoreStories: StorybookStory[]
+    listStories?: boolean
 }
 
 interface StoryshotsConfig {
@@ -15,9 +16,14 @@ export function storyshotsEnv(): StoryshotsEnvironment {
     const env: StoryshotsEnvironment = {
         singleStory: undefined,
         ignoreStories: [],
+        listStories: false,
     }
     if (process.env.STORYSHOTS_STORY) {
         env.singleStory = StorybookStory.fromString(process.env.STORYSHOTS_STORY)
+    }
+
+    if (process.env.STORYSHOTS_LIST === 'true') {
+        env.listStories = true
     }
 
     //dynamically import the configuration file from the path '/storyshots/.storyshots.json', if it exists

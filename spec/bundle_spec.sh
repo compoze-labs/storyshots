@@ -31,6 +31,10 @@ Describe 'the bundle'
     run_batect storyshots-update spec/batect.ignore.yml
   }
 
+  storyshots_list() {
+    run_batect storyshots-list spec/batect.all.yml
+  }
+
   setup() { 
     reset_repo
     pnpm -F sample build-storybook > /dev/null 2>&1
@@ -40,6 +44,15 @@ Describe 'the bundle'
   AfterAll 'reset_repo'
 
   Describe 'happy paths'
+
+    It 'can list stories to test'
+      When run storyshots_list
+      The output should include '9 stories to test'
+      The output should include '🔘 example-button--primary'
+      The output should include '🔘 example-button--secondary'
+      The stderr should match pattern '*'
+      The status should be success
+    End
 
     It 'can generate a new set of baselines and fail if they do not exist'
       When run storyshots_all
