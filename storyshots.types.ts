@@ -3,10 +3,10 @@ export class StorybookStory {
     target: boolean
     ignore: boolean
     
-    constructor(title: string, target: boolean) {
+    constructor(title: string, target: boolean, ignore = false) {
         this.title = title
         this.target = target
-        this.ignore = false
+        this.ignore = ignore
     }
 
     static fromString(title: string): StorybookStory {
