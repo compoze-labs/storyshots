@@ -1,10 +1,10 @@
 import { Page, test } from '@playwright/test'
-import { storyshotsEnv } from './storyshots.env'
+import { storyshotsEnv, StoryshotsEnvironment } from './storyshots.env'
 import { StorybookStory } from './storyshots.types'
 
-const { singleStory, ignoreStories } = storyshotsEnv()
+export function testStories(env: StoryshotsEnvironment, testFunc: (page: Page, stories: StorybookStory[]) => Promise<void>) {
+    const { singleStory, ignoreStories } = env
 
-export function testStories(testFunc: (page: Page, stories: StorybookStory[]) => Promise<void>) {
     test('specs', async ({ page }, testConfig) => {
         testConfig.snapshotSuffix = ''
         
