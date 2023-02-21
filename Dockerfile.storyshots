@@ -6,6 +6,8 @@ RUN chown playwright-user /storyshots
 RUN npm install -g pnpm
 
 COPY playwright.config.storyshots.ts /storyshots
+COPY playwright.config.findStories.ts /storyshots
+COPY storyshots.findStories.ts /storyshots
 COPY storyshots.spec.ts /storyshots
 COPY storyshots.testStories.ts /storyshots
 COPY storyshots.testStory.ts /storyshots

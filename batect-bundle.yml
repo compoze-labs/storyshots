@@ -48,3 +48,12 @@ tasks:
     run:
       container: storyshots
       command: npx playwright test --config=/storyshots/playwright.config.storyshots.ts --update-snapshots
+
+  storyshots-list:
+    dependencies:
+      - storybook-server
+    run:
+      container: storyshots
+      environment:
+        STORYSHOTS_LIST: true
+      command: npx playwright test --config=/storyshots/playwright.config.findStories.ts
