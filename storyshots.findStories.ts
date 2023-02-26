@@ -1,9 +1,10 @@
 import { test } from '@playwright/test'
 import { testStories } from './storyshots.testStories'
-import * as fs from 'fs/promises'
 import { storyshotsEnv } from './storyshots.env'
+import { executionContext } from './storyshots.executionContext'
 
 const env = storyshotsEnv()
+const context = executionContext()
 
 test.describe.only('find stories to test', () => {
     testStories(env, async (page, storiesList) => {
@@ -14,10 +15,6 @@ test.describe.only('find stories to test', () => {
             })
         }
 
-        return fs.writeFile(
-            'stories.json',
-            JSON.stringify(storiesList, null, 2),
-            { encoding: 'utf8' }
-        )
+        return context.setStories(storiesList)
     })
 })
