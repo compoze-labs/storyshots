@@ -13,7 +13,7 @@ const config: PlaywrightTestConfig = {
         timeout: 5000,
     },
     retries: 0,
-    workers: 1,
+    workers: 4,
     reporter: [['html', { open: 'never' }]],
     use: {
         screenshot: 'off',

@@ -7,7 +7,7 @@ import { testStory } from './storyshots.testStory'
 const env = storyshotsEnv()
 const context = executionContext()
 
-
+test.describe.configure({ mode: 'parallel' });
 
 test.describe.only('visual regressions', async () => {
     const stories = context.getStories()

@@ -11,7 +11,7 @@ To include in a `batect.yml`, you need to add the following block:
 include:
   - type: git
     repo: https://github.com/compoze-labs/storyshots.git
-    ref: 0.7.0
+    ref: 0.8.0
 ```
  
 Once included, you will now have access to two tasks: `./batect storyshots` and `./batect storyshots-update`. However, these two commands will also need to know where to find your pre-built Storybook directory:
