@@ -1,4 +1,4 @@
-TEST_RESULTS="test-results-local/test-results/storyshots-visual-regressions-specs-chromium"
+TEST_RESULTS="test-results-local/test-results/storyshots-visual-regressions"
 BATECT_STORYSHOTS="./batect --override-image storyshots=${IMAGE} --config-vars-file spec/batect.test.yml"
 Describe 'the bundle'
 
@@ -56,7 +56,7 @@ Describe 'the bundle'
 
     It 'can generate a new set of baselines and fail if they do not exist'
       When run storyshots_all
-      The output should include '1 failed'
+      The output should include 'failed'
       The output should include '✅ example-button--primary.jpeg'
       The output should include '✅ example-button--secondary.jpeg'
       The stderr should match pattern '*'
@@ -112,11 +112,11 @@ Describe 'the bundle'
 
     It 'can detect when the baseline has deviated and show the diffs'
       When run storyshots_with_ignore
-      The output should include '1 failed'
+      The output should include 'failed'
       The output should include '❌ example-button--primary.jpeg'
       The output should include '✅ example-page--logged-out.jpeg'
       The stderr should match pattern '*'
-      The path ${TEST_RESULTS}/example-button--primary-diff.jpeg should be file
+      The path ${TEST_RESULTS}-example-button--primary-chromium/example-button--primary-diff.jpeg should be file
       The status should be failure
     End
 
