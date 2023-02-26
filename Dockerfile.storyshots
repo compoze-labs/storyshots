@@ -14,6 +14,8 @@ COPY storyshots.testStory.ts /storyshots
 COPY storyshots.env.ts /storyshots
 COPY storyshots.executionContext.ts /storyshots
 COPY storyshots.types.ts /storyshots
+COPY storyshots.run.sh /storyshots
+COPY storyshots.update.sh /storyshots
 COPY package.json /storyshots
 COPY pnpm-lock.yaml /storyshots
 
@@ -22,4 +24,4 @@ RUN pnpm install --frozen-lockfile
 
 USER playwright-user
 
-CMD [ "npx", "playwright", "test", "--config=/storyshots/playwright.config.storyshots.ts" ]
+CMD /storyshots/storyshots.run.sh
