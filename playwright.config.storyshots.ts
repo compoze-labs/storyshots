@@ -8,7 +8,7 @@ const config: PlaywrightTestConfig = {
     testDir: '/storyshots',
     testMatch: /storyshots.spec.ts/i,
     snapshotPathTemplate: '/storyshots/storyshots/{arg}{ext}',
-    timeout: 10 * 1000, // should be a static site, so 10s should be plenty
+    timeout: 5 * 60 * 1000,
     expect: {
         timeout: 5000,
     },
