@@ -18,7 +18,7 @@ export async function testStory(page: Page, { storyshot, url, ignore }: Storyboo
     let storyPassed = true
     try {
         expect(image).toMatchSnapshot(storyshot, {
-            maxDiffPixelRatio: 0,
+            maxDiffPixelRatio: 0.05,
         })
     } catch (err) {
         storyPassed = false

@@ -1,5 +1,5 @@
 import { Page, test } from '@playwright/test'
-import { storyshotsEnv, StoryshotsEnvironment } from './storyshots.env'
+import { StoryshotsEnvironment } from './storyshots.env'
 import { StorybookStory } from './storyshots.types'
 
 export function testStories(env: StoryshotsEnvironment, testFunc: (page: Page, stories: StorybookStory[]) => Promise<void>) {
@@ -40,19 +40,16 @@ async function getStoriesList(page: Page): Promise<StorybookStory[]> {
     const storiesList: StorybookStory[] = []
 
     await page.waitForSelector(
-        '[data-nodetype=component], [data-nodetype=group]'
+        ' [data-nodetype=component]'
     )
 
-    const components = page.locator(
-        '[data-nodetype=component], [data-nodetype=group]'
+    const closedComponents = page.locator(
+        '[data-nodetype=component][aria-expanded=false]'
     )
-    let i = 0
-    while (i < (await components.count())) {
-        const currentComponent = page
-            .locator('[data-nodetype=component], [data-nodetype=group]')
-            .nth(i)
-        await currentComponent.click()
-        i++
+    let closedComponentsCount = await closedComponents.count()
+    while (closedComponentsCount > 0) {
+        await closedComponents.nth(0).click()
+        closedComponentsCount = await closedComponents.count()
     }
 
     const stories = page.locator('[data-nodetype=story]')

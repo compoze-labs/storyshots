@@ -1,31 +1,26 @@
 diff --git a/sample-storybook/src/stories/Button.stories.tsx b/sample-storybook/src/stories/Button.stories.tsx
-index c331bd4..1e6ae52 100644
+index f49be6a..3a50643 100644
 --- a/sample-storybook/src/stories/Button.stories.tsx
 +++ b/sample-storybook/src/stories/Button.stories.tsx
-@@ -20,22 +20,22 @@ export const Primary = Template.bind({});
- // More on args: https://storybook.js.org/docs/react/writing-stories/args
- Primary.args = {
-   primary: true,
--  label: 'Button',
-+  label: 'Not a Button',
- };
+@@ -11,17 +11,17 @@ export default {
+ type Story = StoryObj<typeof Button>
  
- export const Secondary = Template.bind({});
- Secondary.args = {
--  label: 'Button',
-+  label: 'Not a Button',
- };
+ export const Primary: Story = {
+-  render: () => <Button label="Button" primary={true} />,
++  render: () => <Button label="Not a Button" primary={true} />,
+ }
  
- export const Large = Template.bind({});
- Large.args = {
-   size: 'large',
--  label: 'Button',
-+  label: 'Not a Button',
- };
+ export const Secondary: Story = {
+-  render: () => <Button label="Button" primary={false} />,
++  render: () => <Button label="Not a Button" primary={false} />,
+ }
  
- export const Small = Template.bind({});
- Small.args = {
-   size: 'small',
--  label: 'Button',
-+  label: 'Not a Button',
- };
+ export const Large: Story = {
+-  render: () => <Button label="Button" size="large" />,
++  render: () => <Button label="Not a Button" size="large" />,
+ }
+ 
+ export const Small: Story = {
+-  render: () => <Button label="Button" size="small" />,
++  render: () => <Button label="Not a Button" size="small" />,
+ }
