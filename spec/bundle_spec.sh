@@ -1,13 +1,28 @@
 TEST_RESULTS="test-results-local/test-results/storyshots-visual-regressions"
-BATECT_STORYSHOTS="./batect --override-image storyshots=${IMAGE} --config-vars-file spec/batect.test.yml"
 Describe 'the bundle'
 
+  check_git_clean() {
+    if [[ -n $(git status -s) ]]; then
+      echo -e "\033[0;31m"
+      echo "HEY! LISTEN!"
+      echo
+      echo "These tests require a clean git repo. Please stash or commit your changes as WIP before running again."
+      echo
+      echo "^^^^^^ SEE THIS THING ^^^^^^"
+      echo -e "\033[0m"
+      exit 1
+    fi
+  }
+
+  reset_box_stories() {
+    git checkout sample-storybook/src/stories/BigBox.stories.tsx > /dev/null 2>&1
+  }
   reset_button_stories() {
     git checkout sample-storybook/src/stories/Button.stories.tsx > /dev/null 2>&1
   }
-  reset_repo() {
-    rm -rf test-results-local
 
+  reset_repo() {
+    reset_box_stories
     reset_button_stories
   }
 
@@ -35,7 +50,10 @@ Describe 'the bundle'
     run_batect storyshots-list spec/batect.all.yml
   }
 
-  setup() { 
+  setup() {
+    check_git_clean
+
+    rm -rf test-results-local
     reset_repo
     pnpm -F sample build-storybook > /dev/null 2>&1
   }
@@ -47,7 +65,7 @@ Describe 'the bundle'
 
     It 'can list stories to test'
       When run storyshots_list
-      The output should include '9 stories to test'
+      The output should include '10 stories to test'
       The output should include '🔘 example-button--primary'
       The output should include '🔘 example-button--secondary'
       The stderr should match pattern '*'
@@ -110,23 +128,21 @@ Describe 'the bundle'
     }
     BeforeAll 'setup_new_diffs'
 
-    It 'can detect when the baseline has deviated and show the diffs'
+    It 'can detect when the baseline has deviated and show the actual vs expected'
       When run storyshots_with_ignore
       The output should include 'failed'
-      The output should include '❌ example-button--primary.jpeg'
+      The output should include '❌ bigbox--a-big-box.jpeg'
       The output should include '✅ example-page--logged-out.jpeg'
       The stderr should match pattern '*'
-      The path ${TEST_RESULTS}-example-button--primary-chromium/example-button--primary-diff.jpeg should be file
+      The path ${TEST_RESULTS}-bigbox--a-big-box-chromium/bigbox--a-big-box-actual.jpeg should be file
+      The path ${TEST_RESULTS}-bigbox--a-big-box-chromium/bigbox--a-big-box-expected.jpeg should be file
       The status should be failure
     End
 
     It 'can update baselines'
       When run storyshots_update
       The output should include '1 passed'
-      The output should include '/storyshots/storyshots/example-button--primary.jpeg does not match, writing actual.'
-      The output should include '/storyshots/storyshots/example-button--secondary.jpeg does not match, writing actual.'
-      The output should include '/storyshots/storyshots/example-button--large.jpeg does not match, writing actual.'
-      The output should include '/storyshots/storyshots/example-button--small.jpeg does not match, writing actual.'
+      The output should include '/storyshots/storyshots/bigbox--a-big-box.jpeg does not match, writing actual.'
       The stderr should match pattern '*'
       The status should be success
     End

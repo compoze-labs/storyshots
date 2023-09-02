@@ -1,26 +1,15 @@
-diff --git a/sample-storybook/src/stories/Button.stories.tsx b/sample-storybook/src/stories/Button.stories.tsx
-index f49be6a..3a50643 100644
---- a/sample-storybook/src/stories/Button.stories.tsx
-+++ b/sample-storybook/src/stories/Button.stories.tsx
-@@ -11,17 +11,17 @@ export default {
- type Story = StoryObj<typeof Button>
- 
- export const Primary: Story = {
--  render: () => <Button label="Button" primary={true} />,
-+  render: () => <Button label="Not a Button" primary={true} />,
- }
- 
- export const Secondary: Story = {
--  render: () => <Button label="Button" primary={false} />,
-+  render: () => <Button label="Not a Button" primary={false} />,
- }
- 
- export const Large: Story = {
--  render: () => <Button label="Button" size="large" />,
-+  render: () => <Button label="Not a Button" size="large" />,
- }
- 
- export const Small: Story = {
--  render: () => <Button label="Button" size="small" />,
-+  render: () => <Button label="Not a Button" size="small" />,
- }
+diff --git a/sample-storybook/src/stories/BigBox.stories.tsx b/sample-storybook/src/stories/BigBox.stories.tsx
+index 181cf8b..99fec9e 100644
+--- a/sample-storybook/src/stories/BigBox.stories.tsx
++++ b/sample-storybook/src/stories/BigBox.stories.tsx
+@@ -12,8 +12,8 @@ type Story = StoryObj<typeof Button>
+ export const ABigBox: Story = {
+   render: () => 
+     <div style={{
+-        width: "400px",
+-        height: "400px",
++        width: "900px",
++        height: "900px",
+         backgroundColor: "black",
+       }} 
+     />,
