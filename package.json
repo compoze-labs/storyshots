@@ -14,7 +14,7 @@
     "start:update": "pnpm build && ./batect --override-image storyshots=local-storyshots storyshots-update",
     "build": "docker build -t local-storyshots -f Dockerfile.storyshots .",
     "test:local": "pnpm build && IMAGE=local-storyshots pnpm test",
-    "test": "bash shellspec"
+    "test": "bash shellspec --fail-fast"
   },
   "devDependencies": {
     "@playwright/test": "^1.29.1",
