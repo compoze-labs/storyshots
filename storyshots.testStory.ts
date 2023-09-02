@@ -1,5 +1,10 @@
 import { expect, Page } from "@playwright/test"
 import { StorybookStory } from "./storyshots.types"
+import { storyshotsEnv } from "./storyshots.env"
+
+const {
+    maxDiffPixelRatio
+} = storyshotsEnv()
 
 export async function testStory(page: Page, { storyshot, url, ignore }: StorybookStory): Promise<Boolean> {
     if (ignore) {
@@ -18,7 +23,7 @@ export async function testStory(page: Page, { storyshot, url, ignore }: Storyboo
     let storyPassed = true
     try {
         expect(image).toMatchSnapshot(storyshot, {
-            maxDiffPixelRatio: 0.05,
+            maxDiffPixelRatio
         })
     } catch (err) {
         storyPassed = false
