@@ -14,7 +14,7 @@ config_variables:
 
 containers:
   storyshots:
-    image: eichelkrautadam/storyshots:0.8.1
+    image: eichelkrautadam/storyshots:0.9.0
     volumes:
       - local: <{batect.project_directory}/<{resultsDirectory}
         container: /storyshots/storyshots
@@ -41,13 +41,21 @@ tasks:
       - storybook-server
     run:
       container: storyshots
+      environment:
+        DEBUG: ${DEBUG:-}
+        LOCAL_RESULTS_DIR: <{resultsDirectory}
+        CONFIG_FILE: <{configPath}
 
   storyshots-update:
     dependencies:
       - storybook-server
     run:
       container: storyshots
-      command: ./storyshots.update.sh
+      environment:
+        DEBUG: ${DEBUG:-}
+        LOCAL_RESULTS_DIR: <{resultsDirectory}
+        CONFIG_FILE: <{configPath}
+      command: ./runtime/scripts/storyshots.update.sh
 
   storyshots-list:
     dependencies:
@@ -56,4 +64,7 @@ tasks:
       container: storyshots
       environment:
         STORYSHOTS_LIST: true
-      command: npx playwright test --config=/storyshots/playwright.config.findStories.ts
+        DEBUG: ${DEBUG:-}
+        LOCAL_RESULTS_DIR: <{resultsDirectory}
+        CONFIG_FILE: <{configPath}
+      command: ./runtime/scripts/storyshots.list.sh

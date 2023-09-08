@@ -7,17 +7,38 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "pnpm build && ./batect --override-image storyshots=local-storyshots storyshots",
-    "start:single": "pnpm build && STORYSHOTS_STORY=example-button--primary ./batect --override-image storyshots=local-storyshots storyshots",
-    "start:list": "pnpm build && ./batect --override-image storyshots=local-storyshots storyshots-list",
-    "start:local": "pnpm build && ./batect --override-image storyshots=local-storyshots --config-vars-file=batect.target-local.yml storyshots",
-    "start:update": "pnpm build && ./batect --override-image storyshots=local-storyshots storyshots-update",
+    "local": "./batect --override-image storyshots=local-storyshots",
+    "start": "pnpm build && pnpm local storyshots",
+    "start:debug": "pnpm build && DEBUG=true pnpm local storyshots",
+    "start:single": "pnpm build && STORYSHOTS_STORY=example-button--primary pnpm local storyshots",
+    "start:list": "pnpm build && pnpm local storyshots-list",
+    "start:local": "pnpm build && pnpm local --config-vars-file=batect.target-local.yml storyshots",
+    "start:update": "pnpm build && pnpm local storyshots-update",
+    "start:update:debug": "pnpm build && DEBUG=true pnpm local storyshots-update",
+    "compile": "tsc --incremental -p runtime/tsconfig.json && tsc --incremental -p runtime-logs-server/tsconfig.json",
     "build": "docker build -t local-storyshots -f Dockerfile.storyshots .",
     "test:local": "pnpm build && IMAGE=local-storyshots pnpm test",
-    "test": "bash shellspec --fail-fast"
+    "test": "bash shellspec --fail-fast",
+    "runtime:logs-server": "node runtime-logs-server/out/serve.js",
+    "runtime:findStories:debug": "playwright test -c runtime/out --config=/storyshots/runtime/out/playwright.config.findStories.js",
+    "runtime:findStories": "pnpm --silent runtime:findStories:debug > /dev/null 2>&1",
+    "runtime:start:debug": "playwright test -c runtime/out --config=/storyshots/runtime/out/playwright.config.storyshots.js",
+    "runtime:start": "pnpm --silent runtime:start:debug > /dev/null 2>&1",
+    "runtime:updateSnapshots:debug": "pnpm runtime:start:debug --update-snapshots",
+    "runtime:updateSnapshots": "pnpm --silent runtime:updateSnapshots:debug > /dev/null 2>&1"
   },
+  "type": "module",
   "devDependencies": {
-    "@playwright/test": "^1.29.1",
-    "@types/node": "^16.18.10"
+    "@playwright/test": "^1.37.1",
+    "@types/body-parser": "^1.19.2",
+    "@types/express": "^4.17.17",
+    "@types/node": "^16.18.10",
+    "axios": "^1.5.0",
+    "body-parser": "^1.20.2",
+    "chalk": "^5.3.0",
+    "express": "^4.18.2",
+    "stdout-update": "^4.0.0",
+    "tasktree-cli": "^8.0.0",
+    "typescript": "^5.1.6"
   }
 }

@@ -1,6 +1,6 @@
 import { writeFile } from 'fs/promises'
 import { readFileSync } from 'fs'
-import { StorybookStory } from './storyshots.types'
+import { StorybookStory } from './storyshots.types.js'
 
 export class ExecutionContext {
     setStories = async (storiesList: StorybookStory[]) => {

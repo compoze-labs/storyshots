@@ -1,4 +1,5 @@
 {
+    "waitForStableMillis": 2000,
     "ignoreStories": [
         "example-animated--animated-in-circle"
     ]   

@@ -1,6 +1,6 @@
 import { Page, test } from '@playwright/test'
-import { StoryshotsEnvironment } from './storyshots.env'
-import { StorybookStory } from './storyshots.types'
+import { StorybookStory } from './storyshots.types.js'
+import { StoryshotsEnvironment } from './storyshots.env.js'
 
 export function testStories(env: StoryshotsEnvironment, testFunc: (page: Page, stories: StorybookStory[]) => Promise<void>) {
     const { singleStory, ignoreStories } = env

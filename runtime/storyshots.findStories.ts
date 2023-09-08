@@ -1,7 +1,7 @@
 import { test } from '@playwright/test'
-import { testStories } from './storyshots.testStories'
-import { storyshotsEnv } from './storyshots.env'
-import { executionContext } from './storyshots.executionContext'
+import { storyshotsEnv } from './storyshots.env.js'
+import { executionContext } from './storyshots.executionContext.js'
+import { testStories } from './storyshots.testStories.js'
 
 const env = storyshotsEnv()
 const context = executionContext()

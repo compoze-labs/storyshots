@@ -2,3 +2,5 @@
 **/storybook-static/
 **/test-results/
 test-results-local/
+runtime/out/
+runtime-logs-server/out/

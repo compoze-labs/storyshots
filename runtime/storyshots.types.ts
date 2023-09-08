@@ -14,7 +14,7 @@ export class StorybookStory {
     }
 
     get storyshot (): string {
-        return `${this.title.replace('storyshots-target-', '')}.jpeg`
+        return `${this.title.replace('storyshots-target-', '')}`
     }
 
     get url (): string {

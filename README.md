@@ -11,7 +11,7 @@ To include in a `batect.yml`, you need to add the following block:
 include:
   - type: git
     repo: https://github.com/compoze-labs/storyshots.git
-    ref: 0.8.1
+    ref: 0.9.0
 ```
  
 Once included, you will now have access to two tasks: `./batect storyshots` and `./batect storyshots-update`. However, these two commands will also need to know where to find your pre-built Storybook directory:
@@ -67,3 +67,12 @@ Sometimes, stories can just be too fiddly to visually regression test. In these 
 }
 ```
 > You will still see it in the output, labelled as ignored via configuration.
+
+## Waiting for Stable
+Animations can get us really pitted sometimes. In order to avoid flaky tests, we can wait for a "stable" state of the component before taking a screenshot. "Stable" is defined as the component not changing for a certain amount of time. To configure this, you can add the following to your `.storyshots.config.json`:
+```json
+{
+    "waitUntilStableMillis": 1000
+}
+```
+> This example waits up to 1 second for the component to be in a stable state.

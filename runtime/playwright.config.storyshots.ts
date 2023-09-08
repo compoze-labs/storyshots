@@ -22,11 +22,23 @@ const config: PlaywrightTestConfig = {
     },
     projects: [
         {
+            name: 'setup',
+            testMatch: /storyshots\.setup\.storyshots\.js/i,
+            fullyParallel: false
+        },
+        {
             name: 'chromium',
+            dependencies: ['setup'],
+            teardown: 'teardown',
             use: {
                 ...devices['Desktop Chrome'],
                 ignoreHTTPSErrors: true,
             },
+        },
+        {
+            name: 'teardown',
+            testMatch: /storyshots\.teardown\.storyshots\.js/i,
+            fullyParallel: false
         },
     ],
 }

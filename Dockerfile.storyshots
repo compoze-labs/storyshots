@@ -1,27 +1,21 @@
-FROM mcr.microsoft.com/playwright:v1.29.1-focal as final
+FROM mcr.microsoft.com/playwright:v1.37.1-focal as final
 
 RUN useradd -ms /bin/bash playwright-user 
 RUN mkdir -p /storyshots
 RUN chown playwright-user /storyshots
 RUN npm install -g pnpm@8
-
-COPY playwright.config.storyshots.ts /storyshots
-COPY playwright.config.findStories.ts /storyshots
-COPY storyshots.findStories.ts /storyshots
-COPY storyshots.spec.ts /storyshots
-COPY storyshots.testStories.ts /storyshots
-COPY storyshots.testStory.ts /storyshots
-COPY storyshots.env.ts /storyshots
-COPY storyshots.executionContext.ts /storyshots
-COPY storyshots.types.ts /storyshots
-COPY storyshots.run.sh /storyshots
-COPY storyshots.update.sh /storyshots
-COPY package.json /storyshots
-COPY pnpm-lock.yaml /storyshots
+RUN npm config --global set update-notifier false
 
 WORKDIR /storyshots
+COPY package.json /storyshots
+COPY pnpm-lock.yaml /storyshots
 RUN pnpm install --frozen-lockfile
+
+COPY runtime /storyshots/runtime
+COPY runtime-logs-server /storyshots/runtime-logs-server
+
+RUN pnpm compile
 
 USER playwright-user
 
-CMD /storyshots/storyshots.run.sh
+CMD /storyshots/runtime/scripts/storyshots.run.sh
