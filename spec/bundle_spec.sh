@@ -64,9 +64,15 @@ Describe 'the bundle'
 
     It 'can list stories to test'
       When run storyshots_list
-      The output should include '11 stories to test'
+      The output should include '13 stories to test'
+
       The output should include '🔘 example-button--primary'
       The output should include '🔘 example-button--secondary'
+
+      # Include nested stories
+      The output should include '🔘 example-nested-egg--example'
+      The output should include '🔘 example-nested-morenested-exeggcute--example'
+
       The stderr should match pattern '*'
       The status should be success
     End

@@ -1,0 +1,9 @@
+.exeggcute {
+   --egg-color: oklch(94.56% 0.023 7.7);
+   display: grid;
+   grid-template-columns: repeat(3, min-content);
+}
+
+.exeggcute .egg {
+   border: 2px solid black;
+}
