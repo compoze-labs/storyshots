@@ -27,6 +27,7 @@ export async function testStory(page: Page, { storyshot, url, ignore, title }: S
     }
 
     await page.goto(url, { waitUntil: 'domcontentloaded' })
+    await waitForStoryReady(page)
 
     if (waitForStableMillis > 0) {
         await waitForStable(page, waitForStableMillis, waiting)
@@ -54,6 +55,11 @@ export async function testStory(page: Page, { storyshot, url, ignore, title }: S
         )
     }
     return storyPassed
+}
+
+async function waitForStoryReady(page: Page) {
+    await page.locator('#storybook-root > *:first-child')
+        .waitFor({ state: 'attached', timeout: 5000 })
 }
 
 // continually take screenshots until the page is stable (i.e. no more animations)
