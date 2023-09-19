@@ -39,6 +39,8 @@ export function testStories(env: StoryshotsEnvironment, testFunc: (page: Page, s
 async function getStoriesList(page: Page): Promise<StorybookStory[]> {
     const storiesList: StorybookStory[] = []
 
+    await openFolders(page)
+
     await page.waitForSelector(
         ' [data-nodetype=component]'
     )
@@ -63,4 +65,16 @@ async function getStoriesList(page: Page): Promise<StorybookStory[]> {
     }
 
     return storiesList
+}
+
+async function openFolders(page: Page): Promise<void> {
+    const closedFolders = page.locator(
+        '[data-nodetype=group][aria-expanded=false]'
+    )
+
+    let closedCount = await closedFolders.count()
+    while (closedCount > 0) {
+        await closedFolders.nth(0).click()
+        closedCount = await closedFolders.count()
+    }
 }

@@ -1,0 +1,7 @@
+.egg {
+  display: block;
+  width: calc(2 * var(--egg-height) / 3);
+  height: var(--egg-height);
+  background-color: var(--egg-color, bisque);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
