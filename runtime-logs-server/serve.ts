@@ -80,33 +80,33 @@ const storyBaselineAltered = (storyEntry: [string, StoryLog]): string[] => {
 }
 
 const createResultString = (): string[] => {
-    const storiesCompleted = Array.from(stories.entries()).filter(([_, { status }]) => status !== 'start' && status !== 'waiting').length
-    const storiesFailed = Array.from(stories.entries()).filter(([_, { status }]) => status === 'failure').length
-    const storiesSkipped = Array.from(stories.entries()).filter(([_, { status }]) => status === 'skipped').length
-    const storiesUnknown = Array.from(stories.entries()).filter(([_, { status }]) => status === 'unknown').length
-    const storiesPassed = storiesCompleted - storiesFailed - storiesSkipped - storiesUnknown
+    const storiesCompleted = Array.from(stories.entries()).filter(([_, { status }]) => status !== 'start' && status !== 'waiting')
+    const storiesFailed = Array.from(stories.entries()).filter(([_, { status }]) => status === 'failure' || status === 'thrown')
+    const storiesSkipped = Array.from(stories.entries()).filter(([_, { status }]) => status === 'skipped')
+    const storiesUnknown = Array.from(stories.entries()).filter(([_, { status }]) => status === 'unknown')
+    const storiesPassed = storiesCompleted.length - storiesFailed.length - storiesSkipped.length - storiesUnknown.length
     
     let unknownString = []
-    if (storiesUnknown > 0) {
+    if (storiesUnknown.length > 0) {
         unknownString = [
             chalk.bold.yellow(`    Baselines altered: ${storiesUnknown}`),
-            ...Array.from(stories.entries()).filter(([_, { status }]) => status === 'unknown').flatMap(storyBaselineAltered)
+            ...storiesUnknown.flatMap(storyBaselineAltered)
         ]
     }
     let failedString = []
-    if (storiesFailed > 0) {
+    if (storiesFailed.length > 0) {
         failedString = [
             '\n',
             chalk.bold.red(`    Failed stories:`),
-            ...Array.from(stories.entries()).filter(([_, { status }]) => status === 'failure').flatMap(failedStoryStringWithLinks)
+            ...storiesFailed.flatMap(failedStoryStringWithLinks)
         ]
     }
     return [
         chalk.bold(`\nSummary:`),
-        chalk.bold(`    Stories: ${storiesCompleted}`),
+        chalk.bold(`    Stories: ${storiesCompleted.length}`),
         chalk.bold.green(`    Passed: ${storiesPassed}`),
-        ...(storiesFailed > 0 ? [chalk.bold.red(`    Failed: ${storiesFailed}`)] : []),
-        chalk.bold.grey(`    Skipped: ${storiesSkipped}`),
+        ...(storiesFailed.length > 0 ? [chalk.bold.red(`    Failed: ${storiesFailed.length}`)] : []),
+        chalk.bold.grey(`    Skipped: ${storiesSkipped.length}`),
         ...unknownString,
         ...failedString
     ]
