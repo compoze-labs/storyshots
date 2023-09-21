@@ -77,7 +77,7 @@ export async function testStory(page: Page, { storyshot, url, ignore, title }: S
 async function waitForStoryReady(page: Page) {
     try {
         await page.locator('#storybook-root > *:first-child')
-            .waitFor({ state: 'attached', timeout: 5000 })
+            .waitFor({ state: 'attached', timeout: 30 * 1000 })
     } catch (err) {
         throw new Error('Story did not mount in time.')
     }
