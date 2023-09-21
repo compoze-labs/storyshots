@@ -1,0 +1,11 @@
+diff --git a/sample-storybook/src/stories/FailSwitch.stories.tsx b/sample-storybook/src/stories/FailSwitch.stories.tsx
+index 1d5103f..2b4d847 100644
+--- a/sample-storybook/src/stories/FailSwitch.stories.tsx
++++ b/sample-storybook/src/stories/FailSwitch.stories.tsx
+@@ -11,5 +11,5 @@ export default {
+ type Story = StoryObj<typeof FailSwitch>
+ 
+ export const Example: Story = {
+-  render: () => <FailSwitch />,
++  render: () => <FailSwitch fail />,
+ }
