@@ -14,52 +14,73 @@ export async function testStory(page: Page, { storyshot, url, ignore, title }: S
     const {
         start,
         failure,
+        thrown,
         success,
         waiting,
         skipped,
         unknown
-    } = startLogging(storyshot)
+    } = startLogging(storyshot, `${localResultsDir}/${title}`)
     await start()
+
+    const consoleErrors = captureConsoleErrors(page)
 
     if (ignore) {
         await skipped("skipped by config")
         return true
     }
 
-    await page.goto(url, { waitUntil: 'domcontentloaded' })
-    await waitForStoryReady(page)
+    try {
+        await page.goto(url, { waitUntil: 'domcontentloaded' })
+        await waitForStoryReady(page)
 
-    if (waitForStableMillis > 0) {
-        await waitForStable(page, waitForStableMillis, waiting)
-    }
-
-    const {
-        storyPassed,
-        snapshotNotExistant,
-        storyPassedButUpdated,
-    } = await assertMatchingSnapshot(page, storyshot, unknown)
-
-    if (storyPassed) {
-        if (snapshotNotExistant) {
-            await unknown("no baseline found")
-        } else if (!storyPassedButUpdated) {
-            await success()
-        } else {
-            await unknown("baseline updated")
+        if (waitForStableMillis > 0) {
+            await waitForStable(page, waitForStableMillis, waiting)
         }
-    } else {
-        await shortenArtifactNames(title)
 
-        await failure(
-            `${localResultsDir}/${title}`
-        )
+        const {
+            storyPassed,
+            snapshotNotExistant,
+            storyPassedButUpdated,
+        } = await assertMatchingSnapshot(page, storyshot, unknown)
+
+        if (storyPassed) {
+            if (snapshotNotExistant) {
+                await unknown("no baseline found")
+            } else if (!storyPassedButUpdated) {
+                await success()
+            } else {
+                await unknown("baseline updated")
+            }
+        } else {
+            await shortenArtifactNames(title)
+
+            await failure()
+        }
+
+        return storyPassed
+    } catch (err) {
+        const image = await page.screenshot({
+            type: 'jpeg',
+            animations: 'disabled',
+            fullPage: true,
+        })
+
+        fs.mkdirSync(`/storyshots/test-results/${title}`, { recursive: true })
+        fs.writeFileSync(`/storyshots/test-results/${title}/error.jpeg`, image)
+        fs.writeFileSync(`/storyshots/test-results/${title}/error.log`, consoleErrors.dump())
+
+        await thrown(err.message ?? err)
+        return false
     }
-    return storyPassed
 }
 
 async function waitForStoryReady(page: Page) {
-    await page.locator('#storybook-root > *:first-child')
-        .waitFor({ state: 'attached', timeout: 5000 })
+    try {
+        await page.locator('#storybook-root > *:first-child')
+            .waitFor({ state: 'attached', timeout: 5000 })
+    } catch (err) {
+        throw new Error('Story did not mount in time.')
+    }
 }
 
 // continually take screenshots until the page is stable (i.e. no more animations)
@@ -146,4 +167,18 @@ async function shortenArtifactNames(title: string) {
         `/storyshots/test-results/${title}/${title}-diff.jpeg`,
         `/storyshots/test-results/${title}/diff.jpeg`,
     )
+}
+
+function captureConsoleErrors(page: Page) {
+    const errors: string[] = []
+
+    page.on('console', async (msg) => {
+        if (msg.type() === 'error') {
+            errors.push(msg.text())
+        }
+    })
+
+    return {
+        dump: () => errors.join('\n'),
+    }
 }

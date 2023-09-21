@@ -8,7 +8,8 @@ interface Log {
     start: () => Promise<void>
     waiting: (log?: string) => Promise<void>
     success: () => Promise<void>
-    failure: (storyLink: string) => Promise<void>
+    failure: (log?: string) => Promise<void>
+    thrown: (reason: string) => Promise<void>
     skipped: (log?: string) => Promise<void>
     unknown: (log?: string) => Promise<void>
 }
@@ -38,13 +39,14 @@ export const completeStoryshots = async () => {
 }
 
 
-export const startLogging = (story: string): Log => {
+export const startLogging = (story: string, linkRoot: string): Log => {
 
-    const send = async (status: 'start' | 'waiting' | 'success' | 'unknown' | 'failure' | 'skipped', log: string) => {
-        axios.post('http://localhost:3000/log', {
+    const send = async (status: 'start' | 'waiting' | 'success' | 'unknown' | 'failure' | 'thrown' | 'skipped', log: string) => {
+        return axios.post('http://localhost:3000/log', {
             story,
             status,
-            log
+            log,
+            linkRoot,
         })
     }
 
@@ -64,8 +66,12 @@ export const startLogging = (story: string): Log => {
         await send('unknown', log ?? '')
     }
 
-    const failure = async (storyLink: string) => {
-        await send('failure', storyLink)
+    const failure = async (log?: string) => {
+        await send('failure', log ?? '')
+    }
+
+    const thrown = async (reason: string) => {
+        await send('thrown', reason)
     }
 
     const skipped = async (log?: string) => {
@@ -77,6 +83,7 @@ export const startLogging = (story: string): Log => {
         waiting,
         success,
         failure,
+        thrown,
         unknown,
         skipped
     }

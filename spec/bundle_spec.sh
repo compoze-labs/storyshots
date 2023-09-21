@@ -19,10 +19,14 @@ Describe 'the bundle'
   reset_button_stories() {
     git checkout sample-storybook/src/stories/Button.stories.tsx > /dev/null 2>&1
   }
+  reset_failswitch_stories() {
+    git checkout sample-storybook/src/stories/FailSwitch.stories.tsx > /dev/null 2>&1
+  }
 
   reset_repo() {
     reset_box_stories
     reset_button_stories
+    reset_failswitch_stories
   }
 
   run_batect() {
@@ -64,7 +68,7 @@ Describe 'the bundle'
 
     It 'can list stories to test'
       When run storyshots_list
-      The output should include '13 stories to test'
+      The output should include '14 stories to test'
 
       The output should include '🔘 example-button--primary'
       The output should include '🔘 example-button--secondary'
@@ -123,27 +127,54 @@ Describe 'the bundle'
 
   Describe 'failure cases'
 
-    setup_new_diffs() { 
-      git apply spec/ensure_failure.patch
-      pnpm -F sample build-storybook > /dev/null 2>&1
-    }
-    BeforeAll 'setup_new_diffs'
+    Describe 'baseline deviated'
+      setup_new_diffs() {
+        git apply spec/ensure_failure.patch
+        pnpm -F sample build-storybook > /dev/null 2>&1
+      }
+      BeforeAll 'setup_new_diffs'
 
-    It 'can detect when the baseline has deviated and show the actual vs expected'
-      When run storyshots_with_ignore
-      The output should include '❌ bigbox--a-big-box'
-      The output should include '✅ example-page--logged-out'
-      The stderr should match pattern '*'
-      The path ${TEST_RESULTS}/bigbox--a-big-box/actual.jpeg should be file
-      The path ${TEST_RESULTS}/bigbox--a-big-box/expected.jpeg should be file
-      The status should be failure
+      It 'can detect when the baseline has deviated and show the actual vs expected'
+        When run storyshots_with_ignore
+        The output should include '❌ bigbox--a-big-box'
+        The output should include '✅ example-page--logged-out'
+        The stderr should match pattern '*'
+        The path ${TEST_RESULTS}/bigbox--a-big-box/actual.jpeg should be file
+        The path ${TEST_RESULTS}/bigbox--a-big-box/expected.jpeg should be file
+        The status should be failure
+      End
+
+      It 'can update baselines'
+        When run storyshots_update
+        The output should include '❓ bigbox--a-big-box (baseline updated)'
+        The stderr should match pattern '*'
+        The status should be success
+      End
     End
 
-    It 'can update baselines'
-      When run storyshots_update
-      The output should include '❓ bigbox--a-big-box (baseline updated)'
-      The stderr should match pattern '*'
-      The status should be success
+    Describe 'story has failure'
+      setup_new_diffs() {
+        git apply spec/ensure_throw.patch
+        pnpm -F sample build-storybook > /dev/null 2>&1
+      }
+      BeforeAll 'setup_new_diffs'
+
+      It 'can detect when the story has thrown an error'
+        When run storyshots_with_ignore
+        The output should include '❌ example-failswitch--example'
+        The output should include '✅ example-page--logged-out'
+        The stderr should match pattern '*'
+        The path ${TEST_RESULTS}/example-failswitch--example/error.jpeg should be file
+        The path ${TEST_RESULTS}/example-failswitch--example/error.log should be file
+        The status should be failure
+      End
+
+      It 'cannot update baselines'
+        When run storyshots_update
+        The output should include '❌ example-failswitch--example'
+        The stderr should match pattern '*'
+        The status should be failure
+      End
     End
 
   End

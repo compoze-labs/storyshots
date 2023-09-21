@@ -25,8 +25,9 @@ let testStatus: TestStatus | undefined = undefined
 interface StoryLog {
     status: Status
     log: string
+    linkRoot: string
 }
-type Status = 'start' | 'waiting' | 'success' | 'failure' | 'skipped' | 'unknown'
+type Status = 'start' | 'waiting' | 'success' | 'failure' | 'thrown' | 'skipped' | 'unknown'
 const stories = new Map<string, StoryLog>()
 let isComplete = false
 const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
@@ -56,17 +57,31 @@ const createStatusString = (): string[] => {
 }
 
 const failedStoryStringWithLinks = (storyEntry: [string, StoryLog]): string[] => {
-    const [story, { log }] = storyEntry
-    const localDir = log
+    const [story, { status, log, linkRoot }] = storyEntry
+    const reason = []
 
-    const actualLink = `          ${chalk.grey('Actual:')} ${chalk.grey(`${localDir}/actual.jpeg`)}`
-    const expectedLink = `          ${chalk.grey('Expected:')} ${chalk.grey(`${localDir}/expected.jpeg`)}`
-    const diffLink = `          ${chalk.grey('Diff:')} ${chalk.grey(`${localDir}/diff.jpeg`)}`
+    if (status === 'failure') {
+        if (log) {
+            reason.push(`          ${chalk.grey(log)}`)
+        }
+
+        const actualLink = `          ${chalk.grey('Actual:')} ${chalk.grey(`${linkRoot}/actual.jpeg`)}`
+        const expectedLink = `          ${chalk.grey('Expected:')} ${chalk.grey(`${linkRoot}/expected.jpeg`)}`
+        const diffLink = `          ${chalk.grey('Diff:')} ${chalk.grey(`${linkRoot}/diff.jpeg`)}`
+
+        reason.push(actualLink, expectedLink, diffLink)
+
+    } else if (status === 'thrown') {
+        const padded = log.split('\n').map((line) => `          ${line}`).join('\n')
+        const screenshot = `          ${chalk.grey('Screen:')} ${chalk.grey(`${linkRoot}/error.jpeg`)}`
+        const consoleLogs = `          ${chalk.grey('Logs:')} ${chalk.grey(`${linkRoot}/error.log`)}`
+
+        reason.push(chalk.grey(padded), screenshot, consoleLogs)
+    }
+
     return [
         `      ${chalk.red(story)}`,
-        actualLink,
-        expectedLink,
-        diffLink
+        ...reason
     ]
 }
 
@@ -128,6 +143,8 @@ setInterval(() => {
                 return `  ✅ ${story}${appendedLog}`
             case 'failure':
                 return `  ❌ ${story}`
+            case 'thrown':
+                return `  ❌ ${story} (threw error)`
             case 'unknown':
                 return `  ❓ ${story}${appendedLog}`
             case 'skipped':
@@ -147,13 +164,15 @@ setInterval(() => {
 interface LogBody {
     story: string
     log: string
-    status: Status
+    status: Status,
+    linkRoot: string
 }
 app.post('/log', (req, res) => {
     const body = req.body as LogBody
     stories.set(body.story, {
         status: body.status,
-        log: body.log
+        log: body.log,
+        linkRoot: body.linkRoot,
     })
     res.sendStatus(200)
 })
