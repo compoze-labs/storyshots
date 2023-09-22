@@ -36,45 +36,25 @@ export function testStories(env: StoryshotsEnvironment, testFunc: (page: Page, s
     })
 }
 
-async function getStoriesList(page: Page): Promise<StorybookStory[]> {
-    const storiesList: StorybookStory[] = []
-
-    await openFolders(page)
-
-    await page.waitForSelector(
-        ' [data-nodetype=component]'
-    )
-
-    const closedComponents = page.locator(
-        '[data-nodetype=component][aria-expanded=false]'
-    )
-    let closedComponentsCount = await closedComponents.count()
-    while (closedComponentsCount > 0) {
-        await closedComponents.nth(0).click()
-        closedComponentsCount = await closedComponents.count()
-    }
-
-    const stories = page.locator('[data-nodetype=story]')
-    const storiesCount = await stories.count()
-    for (let j = 0; j < storiesCount; j++) {
-        const currentStory = stories.nth(j)
-        const title = await currentStory.getAttribute('data-item-id')
-        if (title) {
-            storiesList.push(StorybookStory.fromString(title))
-        }
-    }
-
-    return storiesList
+interface StorybookIndexResponse {
+    v: number
+    entries: Record<string, {
+        id: string
+        type: 'story'
+        name: string
+        title: string
+        importPath: string
+        tags: string[]
+    }>
 }
 
-async function openFolders(page: Page): Promise<void> {
-    const closedFolders = page.locator(
-        '[data-nodetype=group][aria-expanded=false]'
-    )
+async function getStoriesList(page: Page): Promise<StorybookStory[]> {
+    const stoybookIndexResponse = await fetch(`${page.url()}/index.json`)
+        .then((res) => res.json()) as StorybookIndexResponse
 
-    let closedCount = await closedFolders.count()
-    while (closedCount > 0) {
-        await closedFolders.nth(0).click()
-        closedCount = await closedFolders.count()
-    }
+    return Object.entries(stoybookIndexResponse.entries).filter(([, value]) => {
+        return value.type === 'story'
+    }).map(([, value]) => {
+        return StorybookStory.fromString(value.id)
+    })
 }
